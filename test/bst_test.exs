@@ -163,4 +163,64 @@ defmodule ElixirBstTest do
       assert Bst.new(1) == Bst.new(1) |> Bst.delete(0)
     end
   end
+
+  describe "min/1" do
+    test "return the minimum value of the tree" do
+      tree = %Bst{
+        data: 3,
+        left: %Bst{data: 1, right: %Bst{data: 2}},
+        right: %Bst{data: 5, left: %Bst{data: 4}}
+      }
+
+      assert 1 == Bst.min(tree)
+    end
+  end
+
+  describe "remove_min/1" do
+    test "return a new BST with the minimum value removed" do
+      tree = %Bst{
+        data: 3,
+        left: %Bst{data: 1, right: %Bst{data: 2}},
+        right: %Bst{data: 5, left: %Bst{data: 4}}
+      }
+
+      expected_min_removed_tree = %Bst{
+        data: 3,
+        left: %Bst{data: 2},
+        right: %Bst{data: 5, left: %Bst{data: 4}}
+      }
+
+      assert expected_min_removed_tree == Bst.remove_min(tree)
+    end
+  end
+
+  describe "max/1" do
+    test "return the maximum value of the tree" do
+      tree = %Bst{
+        data: 3,
+        left: %Bst{data: 1, right: %Bst{data: 2}},
+        right: %Bst{data: 5, left: %Bst{data: 4}}
+      }
+
+      assert 5 == Bst.max(tree)
+    end
+  end
+
+  describe "remove_max/1" do
+    test "return a new BST with the maximum value removed" do
+      tree = %Bst{
+        data: 3,
+        left: %Bst{data: 1, right: %Bst{data: 2}},
+        right: %Bst{data: 5, left: %Bst{data: 4}}
+      }
+
+      expected_max_removed_tree = %Bst{
+        data: 3,
+        left: %Bst{data: 1, right: %Bst{data: 2}},
+        right: %Bst{data: 4}
+      }
+
+      assert expected_max_removed_tree == Bst.remove_max(tree)
+    end
+  end
 end

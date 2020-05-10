@@ -63,15 +63,50 @@ defmodule Bst do
   # to_list/1
 
   def to_list(tree) do
-    parse_data(tree, [])
+    extract_data(tree, [])
   end
 
-  defp parse_data(nil, acc), do: acc
+  defp extract_data(nil, acc), do: acc
 
-  defp parse_data(%Bst{data: data, right: nil, left: nil}, acc), do: [data | acc]
+  defp extract_data(%Bst{data: data, right: nil, left: nil}, acc), do: [data | acc]
 
-  defp parse_data(tree, acc) do
-    parse_data(tree.right, acc) |> (fn acc -> parse_data(tree.left, [tree.data | acc]) end).()
+  defp extract_data(tree, acc) do
+    extract_data(tree.right, acc) |> (fn acc -> extract_data(tree.left, [tree.data | acc]) end).()
+  end
+
+  # ----------------------------------------------
+  # min & max operators
+
+  def min(node) do
+    if is_nil(node.left) do
+      node.data
+    else
+      min(node.left)
+    end
+  end
+
+  def remove_min(node) do
+    if is_nil(node.left) do
+      remove_node(node)
+    else
+      %{node | left: remove_min(node.left)}
+    end
+  end
+
+  def max(node) do
+    if is_nil(node.right) do
+      node.data
+    else
+      max(node.right)
+    end
+  end
+
+  def remove_max(node) do
+    if is_nil(node.right) do
+      remove_node(node)
+    else
+      %{node | right: remove_max(node.right)}
+    end
   end
 
   # ----------------------------------------------
