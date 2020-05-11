@@ -114,6 +114,42 @@ defmodule ElixirBstTest do
     end
   end
 
+  describe "put/3" do
+    test "replaces the old value with the new if value evaluates to same" do
+      tree = %Bst{
+        data: {3, :value3},
+        left: %Bst{data: {1, :value1}, right: %Bst{data: {2, :value2}}},
+        right: %Bst{data: {5, :value5}, left: %Bst{data: {4, :value4}}}
+      }
+
+      comparator = &(elem(&1, 0) - elem(&2, 0))
+
+      expected_new_tree = %Bst{
+        data: {3, :value3},
+        left: %Bst{data: {1, :new_value1}, right: %Bst{data: {2, :value2}}},
+        right: %Bst{data: {5, :value5}, left: %Bst{data: {4, :value4}}}
+      }
+
+      assert expected_new_tree == Bst.put(tree, {1, :new_value1}, comparator)
+    end
+
+    test "behaves like insert/2 if old value does not exist" do
+      tree = %Bst{
+        data: 3,
+        left: %Bst{data: 1, right: %Bst{data: 2}},
+        right: %Bst{data: 5, left: %Bst{data: 4}}
+      }
+
+      expected_new_tree = %Bst{
+        data: 3,
+        left: %Bst{data: 1, right: %Bst{data: 2}, left: %Bst{data: -1}},
+        right: %Bst{data: 5, left: %Bst{data: 4}}
+      }
+
+      assert expected_new_tree == Bst.put(tree, -1)
+    end
+  end
+
   describe "delete/2" do
     test "with a one-node tree" do
       assert nil == Bst.new(1) |> Bst.delete(1)

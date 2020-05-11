@@ -40,6 +40,23 @@ defmodule Bst do
   end
 
   # ----------------------------------------------
+  # put/3
+
+  def put(tree, new_data, comparator \\ @default_comparator) do
+    put_node(tree, new_data, comparator)
+  end
+
+  defp put_node(nil, new_data, _comparator), do: %Bst{data: new_data}
+
+  defp put_node(tree, new_data, comparator) do
+    compare(tree.data, new_data, comparator, fn
+      :is_gt -> %{tree | right: put_node(tree.right, new_data, comparator)}
+      :is_lt -> %{tree | left: put_node(tree.left, new_data, comparator)}
+      :is_eq -> %{tree | data: new_data}
+    end)
+  end
+
+  # ----------------------------------------------
   # delete/2
 
   def delete(tree, data, comparator \\ @default_comparator)
