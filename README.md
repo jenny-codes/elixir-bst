@@ -1,2 +1,5 @@
-Elixir Implementation of BST
+# Elixir Implementation of BST
 
+## TODO
+- [ ] implement self-balancing algorithm
+- [ ] benchmark performance
