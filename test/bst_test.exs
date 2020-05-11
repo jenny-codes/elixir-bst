@@ -57,6 +57,15 @@ defmodule ElixirBstTest do
 
       assert expected_tree == tree
     end
+
+    test "with custom comparator" do
+      comparator = &(elem(&1, 0) - elem(&2, 0))
+
+      existing_tree = %Bst{data: {1, :dontcare}}
+      expected_tree = %Bst{data: {1, :dontcare}, right: %Bst{data: {2, :betterwork}}}
+
+      assert expected_tree == Bst.insert(existing_tree, {2, :betterwork}, comparator)
+    end
   end
 
   describe "to_list/1" do
@@ -161,6 +170,26 @@ defmodule ElixirBstTest do
 
     test "returns the same tree if element does not exist" do
       assert Bst.new(1) == Bst.new(1) |> Bst.delete(0)
+    end
+
+    test "with custom comparator" do
+      comparator = fn new, orig ->
+        String.length(new) - String.length(orig)
+      end
+
+      tree = %Bst{
+        data: "333",
+        left: %Bst{data: "22", left: %Bst{data: "1"}},
+        right: %Bst{data: "4444", right: %Bst{data: "55555"}}
+      }
+
+      expected_tree = %Bst{
+        data: "333",
+        left: %Bst{data: "1"},
+        right: %Bst{data: "4444", right: %Bst{data: "55555"}}
+      }
+
+      assert expected_tree == Bst.delete(tree, "22", comparator)
     end
   end
 
