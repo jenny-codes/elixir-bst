@@ -94,7 +94,7 @@ defmodule ElixirBstTest do
     end
   end
 
-  describe "to_list/1" do
+  describe "to_list/2" do
     test "returns an empty list if tree is nil" do
       assert [] == Bst.to_list(nil)
     end
@@ -137,6 +137,18 @@ defmodule ElixirBstTest do
       }
 
       assert [1, 2, 3, 4, 5] == Bst.to_list(tree)
+    end
+
+    test "with transformer" do
+      tree = %Bst{
+        data: {3, :value3},
+        left: %Bst{data: {1, :value1}, right: %Bst{data: {2, :value2}}},
+        right: %Bst{data: {5, :value5}, left: %Bst{data: {4, :value4}}}
+      }
+
+      transformer = &elem(&1, 0)
+
+      assert [1, 2, 3, 4, 5] == Bst.to_list(tree, transformer)
     end
   end
 

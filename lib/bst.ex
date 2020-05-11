@@ -96,18 +96,23 @@ defmodule Bst do
   end
 
   # ----------------------------------------------
-  # to_list/1
+  # to_list/2
 
-  def to_list(tree) do
-    extract_data(tree, [])
+  def to_list(tree, transformer \\ & &1) do
+    extract_data(tree, [], transformer)
   end
 
-  defp extract_data(nil, acc), do: acc
+  defp extract_data(nil, acc, _transformer), do: acc
 
-  defp extract_data(%Bst{data: data, right: nil, left: nil}, acc), do: [data | acc]
+  defp extract_data(%Bst{data: data, right: nil, left: nil}, acc, transformer) do
+    [transformer.(data) | acc]
+  end
 
-  defp extract_data(tree, acc) do
-    extract_data(tree.right, acc) |> (fn acc -> extract_data(tree.left, [tree.data | acc]) end).()
+  defp extract_data(tree, acc, transformer) do
+    extract_data(tree.right, acc, transformer)
+    |> (fn acc ->
+          extract_data(tree.left, [transformer.(tree.data) | acc], transformer)
+        end).()
   end
 
   # ----------------------------------------------
