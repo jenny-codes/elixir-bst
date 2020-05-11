@@ -13,7 +13,33 @@ defmodule ElixirBstTest do
     end
   end
 
-  describe "insert/2" do
+  describe "search/3" do
+    test "returns the data if it exists" do
+      tree = %Bst{
+        data: {3, :value3},
+        left: %Bst{data: {1, :value1}, right: %Bst{data: {2, :value2}}},
+        right: %Bst{data: {5, :value5}, left: %Bst{data: {4, :value4}}}
+      }
+
+      comparator = &(&1 - elem(&2, 0))
+
+      assert {4, :value4} == Bst.search(tree, 4, comparator)
+    end
+
+    test "returns nil if data does not exist in the tree" do
+      tree = %Bst{
+        data: {3, :value3},
+        left: %Bst{data: {1, :value1}, right: %Bst{data: {2, :value2}}},
+        right: %Bst{data: {5, :value5}, left: %Bst{data: {4, :value4}}}
+      }
+
+      comparator = &(&1 - elem(&2, 0))
+
+      assert nil == Bst.search(tree, -1, comparator)
+    end
+  end
+
+  describe "insert/3" do
     test "from scratch" do
       assert %Bst{data: 1} == Bst.insert(nil, 1)
     end
@@ -150,7 +176,7 @@ defmodule ElixirBstTest do
     end
   end
 
-  describe "delete/2" do
+  describe "delete/3" do
     test "with a one-node tree" do
       assert nil == Bst.new(1) |> Bst.delete(1)
     end
@@ -241,7 +267,7 @@ defmodule ElixirBstTest do
     end
   end
 
-  describe "remove_min/1" do
+  describe "remove_min/2" do
     test "return a new BST with the minimum value removed" do
       tree = %Bst{
         data: 3,
@@ -271,7 +297,7 @@ defmodule ElixirBstTest do
     end
   end
 
-  describe "remove_max/1" do
+  describe "remove_max/2" do
     test "return a new BST with the maximum value removed" do
       tree = %Bst{
         data: 3,

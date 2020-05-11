@@ -22,7 +22,22 @@ defmodule Bst do
   end
 
   # ----------------------------------------------
-  # insert/2
+  # search/3
+
+  def search(tree, data, comparator \\ @default_comparator)
+
+  def search(nil, _data, _comparator), do: nil
+
+  def search(tree, data, comparator) do
+    compare(tree.data, data, comparator, fn
+      :is_gt -> search(tree.right, data, comparator)
+      :is_lt -> search(tree.left, data, comparator)
+      :is_eq -> tree.data
+    end)
+  end
+
+  # ----------------------------------------------
+  # insert/3
 
   def insert(tree, new_data, comparator \\ @default_comparator) do
     insert_node(tree, %Bst{data: new_data}, comparator)
@@ -57,7 +72,7 @@ defmodule Bst do
   end
 
   # ----------------------------------------------
-  # delete/2
+  # delete/3
 
   def delete(tree, data, comparator \\ @default_comparator)
 
